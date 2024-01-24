@@ -20,9 +20,6 @@ jobs:
           cp arch/* XIOS2/arch/
           cd XIOS2
           ./make_xios --job 2 --arch GCC_LINUX_APT
-          ls -l lib/
-          ls -l inc/
-          ls -l bin/
           cd ..
       - name: run generic
         run: |
@@ -37,14 +34,7 @@ jobs:
           . arch/arch-GCC_LINUX_APT.env
           . arch/arch-GCC_LINUX_APT.path
           export XIOS_BINDIR=$PWD/XIOS2/bin
-          ls -l $XIOS_BINDIR
           export XIOS_INCDIR=$PWD/XIOS2/inc
-          ls -l $XIOS_INCDIR
           export XIOS_LIBDIR=$PWD/XIOS2/lib
-          ls -l $XIOS_BINDIR
 
-          cd xios_examples/read_axis_resample
-          make
-          make run
-          ncdump axis_output.nc
-          cd ../..
+          python3 -m unittest Discover -v -s xios_examples
