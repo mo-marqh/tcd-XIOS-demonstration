@@ -32,3 +32,19 @@ jobs:
           sed -i 's/nb_proc_atm=4/nb_proc_atm=1/g' param.def
           mpiexec -n 1 ./generic_testcase.exe : -n 1 ./xios_server.exe
           cd ../..
+      - name: run resample example
+        run: |
+          . arch/arch-GCC_LINUX_APT.env
+          . arch/arch-GCC_LINUX_APT.path
+          export XIOS_BINDIR=$PWD/XIOS2/bin
+          ls -l $XIOS_BINDIR
+          export XIOS_INCDIR=$PWD/XIOS2/inc
+          ls -l $XIOS_INCDIR
+          export XIOS_LIBDIR=$PWD/XIOS2/lib
+          ls -l $XIOS_BINDIR
+
+          cd xios_examples/read_axis_resample
+          make
+          make run
+          ncdump axis_output.nc
+          cd ../..
