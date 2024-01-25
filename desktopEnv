@@ -1,3 +1,8 @@
+# this environment management script needs to be sourced in order to provide
+# equivalent functionality on the MO Linux desktop to the Github CI environment.
+# `. desktopEnv`
+
+# Use the LFRic programming environment
 module purge
 module unuse /project/ukmo/rhel7/R/modulefiles; module unuse /project/ukmo/rhel7/fortran/opt/gfortran/modulefiles
 module use /project/extrasoftware/modulefiles.rhel7
@@ -5,11 +10,25 @@ module use /data/users/lfric/software/modulefiles.rhel7
 
 module load environment/lfric/gcc
 
+# provide explit path set to the arch script for netCDF linking
 export NETCDF_LIB_DIR=$NETCDF_4_8_1_ROOT/lib:$NETCDF_4_8_1_ROOT/lib64
 export NETCDF_INC_DIR=$NETCDF_4_8_1_ROOT/include
 
 . arch/arch-GCC_LINUX_APT.path
 
+# provide explicit paths to all XIOS components
 export XIOS_INCDIR=$XIOS_R2252_2_ROOT/include
 export XIOS_LIBDIR=$XIOS_R2252_2_ROOT/lib
 export XIOS_BINDIR=$XIOS_R2252_2_ROOT/bin
+
+# use an extend LFRic Python environment
+# that includes netCDF4-python built w.r.t. the LFRIC
+# netCDF
+. /data/users/itmh/pylfricpyexptl/bin/activate
+
+# dev-notes (starting from the lfric Python as provided by module)
+#    - python -m venv {/some/path} 
+#    - python -m pip install cython mpi4py
+#    - python -m pip install --no-build-isolation netCDF4==1.5.8
+#       - pinned version needed for compatability with libnetcdf 4.8.1
+#    - . activate {/some/path}
