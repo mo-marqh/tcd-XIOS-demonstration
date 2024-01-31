@@ -37,4 +37,4 @@ jobs:
           export XIOS_INCDIR=$PWD/XIOS2/inc
           export XIOS_LIBDIR=$PWD/XIOS2/lib
 
-          python3 -m unittest Discover -v -s xios_examples
+          python3 -m unittest discover -v -s xios_examples
