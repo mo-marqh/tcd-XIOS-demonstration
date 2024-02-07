@@ -1,5 +1,5 @@
 !-----------------------------------------------------------------------------
-! (C) Crown copyright 2020 Met Office. All rights reserved.
+! (C) Crown copyright 2024 Met Office. All rights reserved.
 ! The file LICENCE, distributed with this code, contains details of the terms
 ! under which the code may be used.
 !-----------------------------------------------------------------------------
@@ -30,6 +30,16 @@ contains
     integer :: lenrx
     integer :: leny
     integer :: lenry
+    integer :: isegment
+    integer :: jsegment
+    integer :: iseg_st
+    integer :: jseg_st
+    integer :: iseg_n
+    integer :: jseg_n
+    integer :: irseg_st
+    integer :: jrseg_st
+    integer :: irseg_n
+    integer :: jrseg_n
 
     ! Arbitrary datetime setup, required for XIOS but unused
     origin = xios_date(2022, 2, 2, 12, 0, 0)
@@ -68,8 +78,37 @@ contains
     call xios_set_start_date(start)
     call xios_set_timestep(tstep)
 
-    call xios_set_domain_attr("original_domain", ni=lenx, nj=leny, ibegin=0, jbegin=0)
-    call xios_set_domain_attr("resampled_domain", ni=lenrx, nj=lenry, ibegin=0, jbegin=0)
+    ! analyse domain sizes to assign sub-domains to ranks
+    iseg_st = rank * (lenx / npar)
+    jseg_st = rank * (leny / npar)
+
+    if( npar == rank + 1 ) then
+      iseg_n = lenx - iseg_st
+      jseg_n = leny - jseg_st
+    else
+      iseg_n = ((rank + 1) * (lenx / npar)) - iseg_st 
+      jseg_n = ((rank + 1) * (leny / npar)) - jseg_st 
+    end if
+
+    ! analyse domain sizes to assign sub-domains to ranks
+    irseg_st = rank * (lenrx / npar)
+    jrseg_st = rank * (lenry / npar)
+
+    if( npar == rank + 1 ) then
+      irseg_n = lenrx - irseg_st
+      jrseg_n = lenry - jrseg_st
+    else
+      irseg_n = ((rank + 1) * (lenrx / npar)) - irseg_st 
+      jrseg_n = ((rank + 1) * (lenry / npar)) - jrseg_st 
+    end if
+
+    print*, 'rank:', rank, 'i', iseg_st, '+', iseg_n, '| j', jseg_st, '+', jseg_n
+    print*, 'rank:', rank, 'ir', irseg_st, '+', irseg_n, '| jr', jrseg_st, '+', jrseg_n
+
+    call xios_set_domain_attr("original_domain", ni=iseg_n,&
+                              & nj=jseg_n, ibegin=iseg_st, jbegin=jseg_st)
+    call xios_set_domain_attr("resampled_domain", ni=irseg_n,&
+                              & nj=jrseg_n, ibegin=irseg_st, jbegin=jrseg_st)
 
     call xios_close_context_definition()
 
@@ -103,10 +142,15 @@ contains
     double precision, dimension (:,:), allocatable :: inodata
     double precision, dimension (:,:), allocatable :: inedata
 
-    call xios_get_domain_attr('original_domain', ni_glo=lenx)
-    call xios_get_domain_attr('original_domain', nj_glo=leny)
-    call xios_get_domain_attr('resampled_domain', ni_glo=lenrx)
-    call xios_get_domain_attr('resampled_domain', nj_glo=lenry)
+    ! call xios_get_domain_attr('original_domain', ni_glo=lenx)
+    ! call xios_get_domain_attr('original_domain', nj_glo=leny)
+    ! call xios_get_domain_attr('resampled_domain', ni_glo=lenrx)
+    ! call xios_get_domain_attr('resampled_domain', nj_glo=lenry)
+
+    call xios_get_domain_attr('original_domain', ni=lenx)
+    call xios_get_domain_attr('original_domain', nj=leny)
+    call xios_get_domain_attr('resampled_domain', ni=lenrx)
+    call xios_get_domain_attr('resampled_domain', nj=lenry)
 
     allocate ( inodata(leny, lenx) )
     allocate ( inedata(lenry, lenrx) )

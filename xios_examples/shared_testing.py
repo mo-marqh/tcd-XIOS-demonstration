@@ -75,7 +75,7 @@ class _TestCase(unittest.TestCase):
             subprocess.run(['ncgen', '-k', 'nc4', '-o', inputfile,
                             infile], cwd=cls.test_dir)
             # run the compiled Fortran XIOS programme
-            subprocess.run(['mpiexec', '-n', '1', './resample.exe', ':',
+            subprocess.run(['mpiexec', '-n', '3', './resample.exe', ':',
                             '-n', '1', './xios_server.exe'], cwd=cls.test_dir)
             # load the result netCDF file
             runfile = '{}/{}'.format(cls.test_dir, outputfile)
