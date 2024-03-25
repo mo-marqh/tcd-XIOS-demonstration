@@ -36,5 +36,6 @@ jobs:
           export XIOS_BINDIR=$PWD/XIOS2/bin
           export XIOS_INCDIR=$PWD/XIOS2/inc
           export XIOS_LIBDIR=$PWD/XIOS2/lib
+          export MPI_FLAVOUR='openmpi'
 
           python3 -m unittest discover -v -s xios_examples

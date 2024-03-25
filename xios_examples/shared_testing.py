@@ -75,8 +75,15 @@ class _TestCase(unittest.TestCase):
             subprocess.run(['ncgen', '-k', 'nc4', '-o', inputfile,
                             infile], cwd=cls.test_dir)
             # run the compiled Fortran XIOS programme
-            subprocess.run(['mpiexec', '-n', '3', './resample.exe', ':',
-                            '-n', '1', './xios_server.exe'], cwd=cls.test_dir)
+            run_cmd = ['mpiexec', '-n', '3', './resample.exe', ':',
+                            '-n', '1', './xios_server.exe']
+            if os.environ.get('MPI_FLAVOUR', '') == 'openmpi':
+                # use hwthread for github ubuntu runner
+                # but only for known openMPI (set by env var)
+                run_cmd = run_cmd[0:1] + ['--use-hwthread-cpus'] + run_cmd[1:]
+            print(' '.join(run_cmd))
+
+            subprocess.run(run_cmd, cwd=cls.test_dir)
             # load the result netCDF file
             runfile = '{}/{}'.format(cls.test_dir, outputfile)
             assert(os.path.exists(runfile))
