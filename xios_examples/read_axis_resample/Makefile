@@ -21,7 +21,7 @@
 # XIOS_LIBDIR: The directory for XIOS lib files
 # XIOS_BINDIR: The directory for XIOS binary files
 
-FCFLAGS = -g -ffree-line-length-none
+FCFLAGS = -g #-ffree-line-length-none
 
 FC = mpif90       # compiler driver for MPI programs
 
