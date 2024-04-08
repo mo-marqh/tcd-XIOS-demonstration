@@ -12,13 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [XIOS/trunk@2252, XIOS2/trunk, XIOS3/trunk@2615]
+        version: [XIOS/trunk@2252, XIOS2/trunk, XIOS3/trunk@2612]
     steps:
       # Check out repository branch
       - uses: actions/checkout@v4
       - name: Install dependencies
         run: |
             sudo apt update
+            sudo apt upgrade
             sudo apt -yq install subversion
             sudo apt -yq install $(<dependencies)
       - name: clone and build XIOS
