@@ -43,7 +43,7 @@ class _TestCase(unittest.TestCase):
         """
         subprocess.run(['make', 'clean'], cwd=cls.test_dir, check=True)
         subprocess.run(['make'], cwd=cls.test_dir, check=True)
-        if os.environ.get('MVER', '') == 'XIOS3/trunk':
+        if os.environ.get('MVER', '').startswith('XIOS3/trunk'):
             with open(os.path.join(cls.test_dir, 'xios.xml'), 'r') as ioin:
                 iodef_in = ioin.read()
             # patch in transport protocol choice for XIOS3
@@ -90,6 +90,18 @@ class _TestCase(unittest.TestCase):
         """
         if not os.environ.get('logs'):
             subprocess.run(['make', 'clean'], cwd=cls.test_dir)
+        if os.environ.get('MVER', '').startswith('XIOS3/trunk'):
+            with open(os.path.join(cls.test_dir, 'xios.xml'), 'r') as ioin:
+                iodef_in = ioin.read()
+            # patch back out transport protocol choice for XIOS3
+            # to avoid spurious git diff
+            in2 = '<variable_group id="parameters" >'
+            in3 = ('<variable_group id="parameters" >\n'
+                   '    <variable id="transport_protocol" '
+                   'type="string" >p2p</variable>')
+            iodef_out = iodef_in.replace(in3, in2)
+            with open(os.path.join(cls.test_dir, 'xios.xml'), 'w') as ioout:
+                ioout.write(iodef_out)
 
 
     @classmethod

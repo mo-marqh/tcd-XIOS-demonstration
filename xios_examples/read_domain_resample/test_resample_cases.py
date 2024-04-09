@@ -38,7 +38,7 @@ for f in glob.glob('{}/*.cdl'.format(this_dir)):
     # unique name for the test
     tname = 'test_{}'.format(os.path.splitext(os.path.basename(f))[0])
     # add the test as an attribute (function) to the test class
-    if os.environ.get('MVER', '') == 'XIOS3/trunk':
+    if os.environ.get('MVER', '').startswith('XIOS3/trunk'):
         # these tests are hitting exceptions with XIOS3
         # but not XIOS2, so skip for XIOS3 runner
         setattr(TestResampleDomain, tname,

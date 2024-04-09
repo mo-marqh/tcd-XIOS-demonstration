@@ -1,23 +1,29 @@
 # this environment management script needs to be sourced in order to provide
 # equivalent functionality on Archer2 to the Github CI environment.
 # `. archerEnv`
+# for XIOS build selection, set XIOS_DIR & MVER in session
 
 module load cray-hdf5-parallel
 module load cray-netcdf-hdf5parallel
 module load cray-python
+module load netcdf4
 
 export NETCDF_LIBDIR=-L$NETCDF_DIR/lib
 export NETCDF_INCDIR=-I$NETCDF_DIR/include/
 
-# provide explicit paths to all XIOS components
-export XIOS_INCDIR=/work/n02/n02/marqh/metofficegit/tcd-XIOS3-extras/inc
-export XIOS_LIBDIR=/work/n02/n02/marqh/metofficegit/tcd-XIOS3-extras/lib
-export XIOS_BINDIR=/work/n02/n02/marqh/metofficegit/tcd-XIOS3-extras/bin
+# set XIOS build to XIOS3 marqh build, if not already set
+: ${XIOS_DIR=/work/n02/n02/marqh/metofficegit/tcd-XIOS3-extras}
 
-# netCDF4 python installed via pip into --user
+# provide explicit paths to all XIOS components
+export XIOS_INCDIR=$XIOS_DIR/inc
+export XIOS_LIBDIR=$XIOS_DIR/lib
+export XIOS_BINDIR=$XIOS_DIR/bin
 
 # set env variable for run switching (mpiexec / srun) and iodef patching (transport)
 export PLATFORM=Archer2
-export MVER=XIOS3/trunk
+
+# default to XIOS3 version identifier unless set
+: ${MVER=XIOS3/trunk}
+export MVER
 # start interative session
 salloc --nodes=2 --ntasks-per-node=8 --cpus-per-task=1 --time=00:15:00 --partition=standard --qos=short --account=n02-cms
