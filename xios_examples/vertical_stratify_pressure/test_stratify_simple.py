@@ -24,14 +24,11 @@ class TestResampleAxis(xshared._TestCase):
         with open('{}/xios.xml'.format(self.test_dir)) as cxml:
             print(cxml.read(), flush=True)
         self.run_mpi_xios()
-        # subprocess.run(['mpiexec', '-n', '1', './resample.exe', ':',
-        #                 '-n', '1', './xios_server.exe'],
-        #                 cwd=self.test_dir, check=True)
         outputfile = self.transient_outputs[0]
         runfile = '{}/{}'.format(self.test_dir, outputfile)
         assert(os.path.exists(runfile))
         rootgrp = netCDF4.Dataset(runfile, 'r')
-        # read data from the resampled, expected & diff variables
+
         expected = np.array([[[273.70905]],
                             [[228.19833]],
                             [[221.43733]],

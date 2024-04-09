@@ -6,8 +6,8 @@ module load cray-hdf5-parallel
 module load cray-netcdf-hdf5parallel
 module load cray-python
 
-export NETCDF_LIBDIR=-L/opt/cray/pe/netcdf-hdf5parallel/4.9.0.1/crayclang/14.0/lib
-export NETCDF_INCDIR=-I/opt/cray/pe/netcdf-hdf5parallel/4.9.0.1/include/
+export NETCDF_LIBDIR=-L$NETCDF_DIR/lib
+export NETCDF_INCDIR=-I$NETCDF_DIR/include/
 
 # provide explicit paths to all XIOS components
 export XIOS_INCDIR=/work/n02/n02/marqh/metofficegit/tcd-XIOS3-extras/inc
