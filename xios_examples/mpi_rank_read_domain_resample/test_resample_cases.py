@@ -11,7 +11,7 @@ import xios_examples.shared_testing as xshared
 this_path = os.path.realpath(__file__)
 this_dir = os.path.dirname(this_path)
 
-class TestResampleDomain(xshared._TestCase):
+class TestResampleDomainMPI(xshared._TestCase):
     test_dir = this_dir
     transient_inputs = ['domain_input.nc']
     transient_outputs = ['domain_output.nc']
@@ -41,12 +41,12 @@ for f in glob.glob('{}/*.cdl'.format(this_dir)):
     if os.environ.get('MVER', '') == 'XIOS3/trunk':
         # these tests are hitting exceptions with XIOS3
         # but not XIOS2, so skip for XIOS3 runner
-        setattr(TestResampleDomain, tname,
-                unittest.skip(TestResampleDomain.make_a_resample_test(f)))
+        setattr(TestResampleDomainMPI, tname,
+                unittest.skip(TestResampleDomainMPI.make_a_resample_test(f)))
     elif tname in known_failures:
         # set decorator @unittest.expectedFailure
-        setattr(TestResampleDomain, tname,
-                unittest.expectedFailure(TestResampleDomain.make_a_resample_test(f)))
+        setattr(TestResampleDomainMPI, tname,
+                unittest.expectedFailure(TestResampleDomainMPI.make_a_resample_test(f)))
     else:
-        setattr(TestResampleDomain, tname,
-                TestResampleDomain.make_a_resample_test(f))
+        setattr(TestResampleDomainMPI, tname,
+                TestResampleDomainMPI.make_a_resample_test(f, nclients=3))
