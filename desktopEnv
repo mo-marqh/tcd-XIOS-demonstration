@@ -11,8 +11,8 @@ module use /data/users/lfric/software/modulefiles.rhel7
 module load environment/lfric/gcc
 
 # provide explit path set to the arch script for netCDF linking
-export NETCDF_LIB_DIR=$NETCDF_4_8_1_ROOT/lib:$NETCDF_4_8_1_ROOT/lib64
-export NETCDF_INC_DIR=$NETCDF_4_8_1_ROOT/include
+export NETCDF_LIB_DIRS=$NETCDF_4_8_1_ROOT/lib:$NETCDF_4_8_1_ROOT/lib64
+export NETCDF_INC_DIRS=$NETCDF_4_8_1_ROOT/include
 
 . arch/arch-GCC_LINUX_APT.path
 

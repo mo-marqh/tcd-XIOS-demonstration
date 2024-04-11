@@ -1,8 +1,8 @@
 NETCDF_INCDIR=""
-IFS=':' read -r -a array <<< "$NETCDF_INC_DIR"
+IFS=':' read -r -a array <<< "$NETCDF_INC_DIRS"
 for element in "${array[@]}"; do NETCDF_INCDIR+="-I$element "; done
 NETCDF_LIBDIR=""
-IFS=':' read -r -a array <<< "$NETCDF_LIB_DIR"
+IFS=':' read -r -a array <<< "$NETCDF_LIB_DIRS"
 for element in "${array[@]}"; do NETCDF_LIBDIR+="-L$element "; done
 NETCDF_LIB="-lnetcdff -lnetcdf"
 export NETCDF_INCDIR

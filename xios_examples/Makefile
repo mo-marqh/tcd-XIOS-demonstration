@@ -7,12 +7,12 @@
 #
 # Environment Variables expected by this MakeFile:
 #
-# NETCDF_LIB_DIR: the directories for the netCDF lib files
-#                 encoded as a -L string, e.g.
-#                 "-L/dir1 -L/dir2"
-# NETCDF_INC_DIR: the directories for the netCDF include files
-#                 encoded as a -I string, e.g.
-#                 "-I/dir3 -I/dir4"
+# NETCDF_LIBDIR: the directories for the netCDF lib files
+#                encoded as a -L string, e.g.
+#                "-L/dir1 -L/dir2"
+# NETCDF_INCDIR: the directories for the netCDF include files
+#                encoded as a -I string, e.g.
+#                "-I/dir3 -I/dir4"
 #     (note, this is for consistency with the XIOS build process
 #      required for the CI build machine.
 #      this is not required for other directories)
