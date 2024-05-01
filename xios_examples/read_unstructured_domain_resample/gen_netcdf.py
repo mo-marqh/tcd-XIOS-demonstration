@@ -215,11 +215,11 @@ def getargs():
 
     parser.add_argument("--meshfile", help="Name of netCDF file containing UGRID mesh data")
     parser.add_argument("--meshvar", help="Variable name of mesh data in netCDF file")
-    parser.add_argument("--func", help="Analytic function for data variable", choices=funclist, default='sinusiod')
-    parser.add_argument("--nlat", help="Number of latitude points for original grid, not needed for UGRID data",type = int, default=101)
-    parser.add_argument("--nlon", help="Number of longitude points for original grid, not needed for UGRID data",type = int, default=100)
-    parser.add_argument("--nlatr", help="Number of latitude points for resampled grid",type = int, default=81)
-    parser.add_argument("--nlonr", help="Number of longitude points for resampled grid",type = int, default=80)
+    parser.add_argument("--func", help="Analytic function for data variable (default: %(default)s)", choices=funclist, default='sinusiod')
+    parser.add_argument("--nlat", help="Number of latitude points for original grid, not needed for UGRID data (default: %(default)s)",type = int, default=101)
+    parser.add_argument("--nlon", help="Number of longitude points for original grid, not needed for UGRID data (default: %(default)s)",type = int, default=100)
+    parser.add_argument("--nlatr", help="Number of latitude points for resampled grid (default: %(default)s)",type = int, default=81)
+    parser.add_argument("--nlonr", help="Number of longitude points for resampled grid (default: %(default)s)",type = int, default=80)
     parser.add_argument("file_out", help="Name of netCDF non-UGRID output file")
 
     args = parser.parse_args()
