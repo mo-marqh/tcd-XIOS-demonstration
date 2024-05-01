@@ -1,5 +1,6 @@
 import sys
 import os
+import argparse
 import netCDF4 as nc
 import numpy as np
 from dataFunc import dataFunc
@@ -12,7 +13,8 @@ def create_ncfile(ncfile, nlat, nlon, func, dim_prefix='', dim_suffix='', data_p
 
     ncfile.createDimension(latname, nlat)
     ncfile.createDimension(lonname, nlon)
-    ncfile.createDimension('nbounds', 2)
+    if 'nbounds' not in ncfile.dimensions:
+        ncfile.createDimension('nbounds', 2)
 
     lat = ncfile.createVariable(latname, np.float32, (latname,))
     lat.units = 'degrees_north'
@@ -203,21 +205,42 @@ def create_ncfile_unstructured(ncmeshout, meshin_file, meshin_varname, func, add
 
     ncmeshin.close()
 
+def getargs():
+
+    df = dataFunc()
+    funclist = df.get_funclist()
+    del df
+
+    parser = argparse.ArgumentParser(description="Generate netCDF files with data on domains suitable for regridding")
+
+    parser.add_argument("--meshfile", help="Name of netCDF file containing UGRID mesh data")
+    parser.add_argument("--meshvar", help="Variable name of mesh data in netCDF file")
+    parser.add_argument("--func", help="Analytic function for data variable", choices=funclist, default='sinusiod')
+    parser.add_argument("--nlat", help="Number of latitude points for original grid, not needed for UGRID data",type = int, default=101)
+    parser.add_argument("--nlon", help="Number of longitude points for original grid, not needed for UGRID data",type = int, default=100)
+    parser.add_argument("--nlatr", help="Number of latitude points for resampled grid",type = int, default=81)
+    parser.add_argument("--nlonr", help="Number of longitude points for resampled grid",type = int, default=80)
+    parser.add_argument("file_out", help="Name of netCDF non-UGRID output file")
+
+    args = parser.parse_args()
+
+    if (args.meshfile and args.meshvar is None) or (args.meshvar and args.meshfile is None):
+        parser.error("UGRID netCDF file output requires both options --meshfile and --meshvar to be specified")
+
+    return args
+
 if __name__ == "__main__":
 
-    mesh_file = 'mesh_C12.nc'
-    mesh_varname = 'dynamics'
-    file_out = 'domain_input.nc'
-    func_str = "sinusiod"
-    if len(sys.argv) == 2:
-        file_out = sys.argv[1]
-    elif len(sys.argv) > 2:
-        file_out = sys.argv[1]
-        func_str = sys.argv[2]
+    args = getargs()
+
+    mesh_file = args.meshfile
+    mesh_varname = args.meshvar
+    file_out = args.file_out
+    func_str = args.func
 
     df = dataFunc()
     func = df.get_func(func_str)
-    mkugrid = True
+    mkugrid = args.meshfile is not None
 
     data_prefix = 'original_'
 
@@ -233,12 +256,12 @@ if __name__ == "__main__":
     ncfile = nc.Dataset(file_out, 'w', format='NETCDF4')
 
     if not mkugrid:
-        nlat = 101
-        nlon = 100
+        nlat = args.nlat
+        nlon = args.nlon
         create_ncfile(ncfile, nlat, nlon, func, data_prefix=data_prefix)
 
-    nlat = 81
-    nlon = 80
+    nlat = args.nlatr
+    nlon = args.nlonr
     data_prefix = 'resample_'
     dim_suffix = '_resample'
     create_ncfile(ncfile, nlat, nlon, func, data_prefix=data_prefix, dim_suffix=dim_suffix)

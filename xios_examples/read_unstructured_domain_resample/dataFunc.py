@@ -103,7 +103,14 @@ class dataFunc:
     
         return data
 
+    def get_funclist(self):
+
+        funclist = [func.removeprefix('func_') for func in dir(self) if callable(getattr(self, func)) and func.startswith('func_')]
+
+        return funclist
+
     def get_func(self, name: str):
+
         do = f"func_{name}"
         if hasattr(self, do) and callable(func := getattr(self, do)):
             return func
