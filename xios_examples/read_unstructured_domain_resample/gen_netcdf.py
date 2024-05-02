@@ -56,11 +56,24 @@ def create_ncfile_unstructured(ncmeshout, meshin_file, meshin_varname, func, add
 
     ncmeshin = nc.Dataset(meshin_file, 'r', format='NETCDF4')
 
+    if meshin_varname is None:
+        for name,var in ncmeshin.variables.items():
+            if 'cf_role' in var.ncattrs():
+                if var.cf_role == 'mesh_topology':
+                    # Will use the first instance of cf_role == 'mesh_topology' found.
+                    # If multiple instances in file consider specifying --meshvar meshin_varname on command line
+                    meshin_varname = name
+                    break
+
+    try:
+        meshin_var = ncmeshin.variables[meshin_varname]
+    except KeyError:
+        print (f'Mesh topology variable {meshin_varname} does not exist')
+        raise
+
     nface = ncmeshin.dimensions[f'n{meshin_varname}_face'].size
     nnode = ncmeshin.dimensions[f'n{meshin_varname}_node'].size
     nedge = ncmeshin.dimensions[f'n{meshin_varname}_edge'].size
-
-    meshin_var = ncmeshin.variables[meshin_varname]
     
     face_node_connectivity = ncmeshin.variables[meshin_var.face_node_connectivity]
     edge_node_connectivity = ncmeshin.variables[meshin_var.edge_node_connectivity]
@@ -213,19 +226,16 @@ def getargs():
 
     parser = argparse.ArgumentParser(description="Generate netCDF files with data on domains suitable for regridding")
 
-    parser.add_argument("--meshfile", help="Name of netCDF file containing UGRID mesh data")
-    parser.add_argument("--meshvar", help="Variable name of mesh data in netCDF file")
+    parser.add_argument("--meshfile", help="Name of netCDF file containing UGRID mesh topology data, needed for UGRID data")
+    parser.add_argument("--meshvar", help="Variable name of mesh topology data in netCDF file, optional for UGRID data", default=None)
     parser.add_argument("--func", help="Analytic function for data variable (default: %(default)s)", choices=funclist, default='sinusiod')
-    parser.add_argument("--nlat", help="Number of latitude points for original grid, not needed for UGRID data (default: %(default)s)",type = int, default=101)
-    parser.add_argument("--nlon", help="Number of longitude points for original grid, not needed for UGRID data (default: %(default)s)",type = int, default=100)
-    parser.add_argument("--nlatr", help="Number of latitude points for resampled grid (default: %(default)s)",type = int, default=81)
-    parser.add_argument("--nlonr", help="Number of longitude points for resampled grid (default: %(default)s)",type = int, default=80)
+    parser.add_argument("--nlat", help="Number of latitude points for original grid, not needed for UGRID data (default: %(default)d)", type = int, default=101)
+    parser.add_argument("--nlon", help="Number of longitude points for original grid, not needed for UGRID data (default: %(default)d)", type = int, default=100)
+    parser.add_argument("--nlatr", help="Number of latitude points for resampled grid (default: %(default)d)", type = int, default=81)
+    parser.add_argument("--nlonr", help="Number of longitude points for resampled grid (default: %(default)d)", type = int, default=80)
     parser.add_argument("file_out", help="Name of netCDF non-UGRID output file")
 
     args = parser.parse_args()
-
-    if (args.meshfile and args.meshvar is None) or (args.meshvar and args.meshfile is None):
-        parser.error("UGRID netCDF file output requires both options --meshfile and --meshvar to be specified")
 
     return args
 

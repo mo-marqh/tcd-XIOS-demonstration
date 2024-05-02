@@ -3,11 +3,18 @@ import shutil
 import os
 import netCDF4 as nc
 
-def add_bounds(file, mesh_varname='Mesh2d', verbose=False):
+def add_bounds(file, mesh_varname=None, verbose=False):
 
     ncfile = nc.Dataset(file, 'a', format='NETCDF4')
     if verbose: print (ncfile)
     
+    if mesh_varname is None:
+        for name,var in ncfile.variables.items():
+            if 'cf_role' in var.ncattrs():
+                if var.cf_role == 'mesh_topology':
+                    mesh_varname = name
+                    break
+
     mesh_var = ncfile.variables[mesh_varname]
     if verbose: print(mesh_var)
     
