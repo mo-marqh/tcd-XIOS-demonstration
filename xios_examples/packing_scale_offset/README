@@ -1,0 +1,5 @@
+Offset & Scal Factor packing
+----------------------------
+
+These examples read in arbitrary data from a netCDF file and pack the data to a hard coded precision to produce integer results data with metadata defining how to recover the reduced precision floats.
+The original and packed data are written to one output NetCDF file.

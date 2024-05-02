@@ -20,6 +20,7 @@ class _TestCase(unittest.TestCase):
     transient_inputs = []
     transient_outputs = []
     rtol = 5e-03
+    executable = './resample.exe'
 
     @classmethod
     def run_mpi_xios(cls, nclients=1, nservers=1):
@@ -27,13 +28,13 @@ class _TestCase(unittest.TestCase):
         if os.environ.get('PLATFORM', '') == 'Archer2':
             run_cmd = ['srun', '--distribution=block:block', '--hint=nomultithread',
                        '--het-group=0', '--nodes=1', '-n', str(nclients),
-                       './resample.exe', ':',
+                       cls.executable, ':',
                        '--het-group=1', '--nodes=1', '-n', str(nservers),
                        './xios_server.exe']
             print(' '.join(run_cmd))
             subprocess.run(run_cmd,cwd=cls.test_dir, check=True)
         else:
-            run_cmd = ['mpiexec', '-n', str(nclients), './resample.exe', ':',
+            run_cmd = ['mpiexec', '-n', str(nclients), cls.executable, ':',
                        '-n', str(nservers), './xios_server.exe']
             if os.environ.get('MPI_FLAVOUR', '') == 'openmpi':
                 # use hwthread for github ubuntu runner
