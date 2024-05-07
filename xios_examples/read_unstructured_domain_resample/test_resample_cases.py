@@ -13,9 +13,10 @@ this_dir = os.path.dirname(this_path)
 
 class TestResampleDomain(xshared._TestCase):
     test_dir = this_dir
-    transient_inputs = ['domain_input.nc']
-    transient_outputs = ['domain_output.nc']
+    transient_inputs = ['domain_input.nc', 'domain_input_ugrid.nc']
+    transient_outputs = ['domain_output.nc', 'domain_output_ugrid.nc']
     rtol = 5e-03
+    mesh_file = 'mesh_C12.nc'
 
 
 # A list of input `.cdl` files where XIOS is known to produce different
@@ -25,18 +26,20 @@ class TestResampleDomain(xshared._TestCase):
 # to register as a known_failure (tname)
 # and the value is a string explaining the failure
 # this handles FAIL conditions but NOT ERROR conditions
-known_failures = {'test_domain_input_edge_simple_square_ten':
-                  ('The bi-linear polynomial poorly reproduces the'
-                   ' input x^2+y^2 function'),
-                  'test_domain_input_simple_square_ten':
-                  ('The bi-linear polynomial poorly reproduces the'
-                   ' input x^2+y^2 function')
+known_failures = {'test_sinusiod':
+                  ('The difference file has large errors'),
+                  'test_harmonic':
+                  ('The difference file has large errors'),
+                  'test_vortex':
+                  ('The difference file has large errors'),
+                  'test_gulfstream':
+                  ('The difference file has large errors')
                   }
 
-# iterate through `.cdl` files in this test case folder
-for f in glob.glob('{}/*.cdl'.format(this_dir)):
+# iterate over analytic function names
+for f in ['sinusiod', 'harmonic', 'vortex', 'gulfstream']:
     # unique name for the test
-    tname = 'test_{}'.format(os.path.splitext(os.path.basename(f))[0])
+    tname = f'test_{f}'
     # add the test as an attribute (function) to the test class
     if os.environ.get('MVER', '').startswith('XIOS3/trunk'):
         # these tests are hitting exceptions with XIOS3
@@ -46,7 +49,7 @@ for f in glob.glob('{}/*.cdl'.format(this_dir)):
     elif tname in known_failures:
         # set decorator @unittest.expectedFailure
         setattr(TestResampleDomain, tname,
-                unittest.expectedFailure(TestResampleDomain.make_a_resample_test(f, nclients=3)))
+                unittest.expectedFailure(TestResampleDomain.make_a_resample_test(f, nc_method='data_func', nclients=3)))
     else:
         setattr(TestResampleDomain, tname,
-                TestResampleDomain.make_a_resample_test(f, nclients=3))
+                TestResampleDomain.make_a_resample_test(f, nc_method='data_func', nclients=3))

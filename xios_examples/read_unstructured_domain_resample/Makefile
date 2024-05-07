@@ -55,4 +55,4 @@ run:
 
 # cleanup
 clean:
-	rm -f *.exe *.o *.mod *.MOD *.out *.err
+	rm -f *.exe *.o *.mod *.MOD *.out *.err $(filter-out mesh_C12.nc,$(wildcard *.nc))

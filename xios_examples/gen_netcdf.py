@@ -3,7 +3,18 @@ import os
 import argparse
 import netCDF4 as nc
 import numpy as np
-from dataFunc import dataFunc
+from .dataFunc import dataFunc
+
+# Global defaults here as needed for command line arguments defaults and argument defaults to run function
+defaults = {
+            'func_str': 'sinusiod',
+            'mesh_file': None,
+            'mesh_varname': None,
+            'nlat': 101,
+            'nlon': 100,
+            'nlatr': 81,
+            'nlonr': 80
+           }
 
 def create_ncfile(ncfile, nlat, nlon, func, dim_prefix='', dim_suffix='', data_prefix='', data_suffix=''):
 
@@ -218,7 +229,7 @@ def create_ncfile_unstructured(ncmeshout, meshin_file, meshin_varname, func, add
 
     ncmeshin.close()
 
-def getargs(args=None):
+def getargs(argv=None):
 
     df = dataFunc()
     funclist = df.get_funclist()
@@ -226,31 +237,28 @@ def getargs(args=None):
 
     parser = argparse.ArgumentParser(description="Generate netCDF files with data on domains suitable for regridding")
 
-    parser.add_argument("--meshfile", help="Name of netCDF file containing UGRID mesh topology data, needed for UGRID data")
-    parser.add_argument("--meshvar", help="Variable name of mesh topology data in netCDF file, optional for UGRID data", default=None)
-    parser.add_argument("--func", help="Analytic function for data variable (default: %(default)s)", choices=funclist, default='sinusiod')
-    parser.add_argument("--nlat", help="Number of latitude points for original grid, not needed for UGRID data (default: %(default)d)", type = int, default=101)
-    parser.add_argument("--nlon", help="Number of longitude points for original grid, not needed for UGRID data (default: %(default)d)", type = int, default=100)
-    parser.add_argument("--nlatr", help="Number of latitude points for resampled grid (default: %(default)d)", type = int, default=81)
-    parser.add_argument("--nlonr", help="Number of longitude points for resampled grid (default: %(default)d)", type = int, default=80)
+    parser.add_argument("--meshfile", help="Name of netCDF file containing UGRID mesh topology data, needed for UGRID data", dest='mesh_file')
+    parser.add_argument("--meshvar", help="Variable name of mesh topology data in netCDF file, optional for UGRID data", dest='mesh_varname')
+    parser.add_argument("--func", help="Analytic function for data variable (default: %(default)s)", choices=funclist, dest='func_str')
+    parser.add_argument("--nlat", help="Number of latitude points for original grid, not needed for UGRID data (default: %(default)d)", type = int)
+    parser.add_argument("--nlon", help="Number of longitude points for original grid, not needed for UGRID data (default: %(default)d)", type = int)
+    parser.add_argument("--nlatr", help="Number of latitude points for resampled grid (default: %(default)d)", type = int)
+    parser.add_argument("--nlonr", help="Number of longitude points for resampled grid (default: %(default)d)", type = int)
     parser.add_argument("file_out", help="Name of netCDF non-UGRID output file")
 
-    args = parser.parse_args(args)
+    parser.set_defaults(**defaults)
+    args = parser.parse_args(argv)
 
     return args
 
-def main(args=None):
-
-    args = getargs(args)
-
-    mesh_file = args.meshfile
-    mesh_varname = args.meshvar
-    file_out = args.file_out
-    func_str = args.func
+def run(file_out, func_str=defaults['func_str'], mesh_file=defaults['mesh_file'], 
+                  mesh_varname=defaults['mesh_varname'], 
+                  nlat=defaults['nlat'], nlon=defaults['nlon'], 
+                  nlatr=defaults['nlatr'], nlonr=defaults['nlonr']):
 
     df = dataFunc()
     func = df.get_func(func_str)
-    mkugrid = args.meshfile is not None
+    mkugrid = mesh_file is not None
 
     data_prefix = 'original_'
 
@@ -266,17 +274,17 @@ def main(args=None):
     ncfile = nc.Dataset(file_out, 'w', format='NETCDF4')
 
     if not mkugrid:
-        nlat = args.nlat
-        nlon = args.nlon
         create_ncfile(ncfile, nlat, nlon, func, data_prefix=data_prefix)
 
-    nlat = args.nlatr
-    nlon = args.nlonr
     data_prefix = 'resample_'
     dim_suffix = '_resample'
-    create_ncfile(ncfile, nlat, nlon, func, data_prefix=data_prefix, dim_suffix=dim_suffix)
+    create_ncfile(ncfile, nlatr, nlonr, func, data_prefix=data_prefix, dim_suffix=dim_suffix)
 
     ncfile.close()
+
+def main(argv=None):
+    args = getargs(argv)
+    run(**vars(args))
 
 if __name__ == "__main__":
     main()
