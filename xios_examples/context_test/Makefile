@@ -21,7 +21,7 @@
 # XIOS_LIBDIR: The directory for XIOS lib files
 # XIOS_BINDIR: The directory for XIOS binary files
 
-FCFLAGS = -g -ffree-line-length-none
+FCFLAGS = -g
 
 FC = mpif90 # compiler driver for MPI programs
 
@@ -36,6 +36,8 @@ LDFLAGS = \
         -lnetcdf \
         -lnetcdff \
         -lstdc++
+
+.PHONY: all, clean, run
 
 OBJ = custom_type_mod.o context_def_mod.o
 
