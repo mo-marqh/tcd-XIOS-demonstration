@@ -5,6 +5,9 @@ import numpy as np
 import os
 import subprocess
 import unittest
+from pathlib import Path
+
+import xios_examples.gen_netcdf as gn
 
 this_path = os.path.realpath(__file__)
 this_dir = os.path.dirname(this_path)
@@ -31,9 +34,8 @@ class _TestCase(unittest.TestCase):
                             inf], cwd=cls.test_dir, check=True)
         elif nc_method == 'data_func':
             # create a  netCDF file from an analytic function
-            os.chdir(cls.test_dir)
-            import xios_examples.gen_netcdf as gn
-            gn.run(inputfile, func_str=inf, mesh_file=cls.mesh_file)
+            cwd = Path(cls.test_dir)
+            gn.run(cwd/inputfile, func_str=inf, mesh_file=cwd/cls.mesh_file)
 
     @classmethod
     def run_mpi_xios(cls, nclients=1, nservers=1):
