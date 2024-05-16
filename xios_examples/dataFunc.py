@@ -1,6 +1,14 @@
 import numpy as np
 
 class dataFunc:
+    """
+    Class containing functions which generate analytical data values for an input of
+    latitude and longitude arrays.
+
+    Functions sinusiod,harmonic,vortex,gulfstream are taken from the paper
+    `Benchmarking Regridding Libraries Used in Earth System Modelling`, see
+    https://www.mdpi.com/2297-8747/27/2/31
+    """
 
     def func_sinusiod(self, latarr, lonarr):
     

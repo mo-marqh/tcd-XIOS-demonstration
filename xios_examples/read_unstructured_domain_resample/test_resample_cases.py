@@ -19,7 +19,7 @@ class TestResampleDomain(xshared._TestCase):
     mesh_file = 'mesh_C12.nc'
 
 
-# A list of input `.cdl` files where XIOS is known to produce different
+# A list of input function names where XIOS is known to produce different
 # output from the expected output data
 # for future investigation / ToDo
 # this is a dict, where the name of the key is the name of the test

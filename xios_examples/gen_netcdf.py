@@ -17,6 +17,19 @@ defaults = {
            }
 
 def create_ncfile(ncfile, nlat, nlon, func, dim_prefix='', dim_suffix='', data_prefix='', data_suffix=''):
+    """
+    Create netCDF file variables for data on a regular latitude/longitude grid.
+
+        Parameters:!play
+            ncfile: An open, writable netCDF4 dataset
+            nlat: Number of latitude points
+            nlon: Number of longitude points
+            func: Function to generate data values
+            dim_prefix: prefix for the latitude/longitude dimension name
+            dim_suffix: suffix for the latitude/longitude dimension name
+            data_prefix): prefix for the data variable name
+            data_suffix): suffix for the data variable name
+    """
 
     latname = f'{dim_prefix}latitude{dim_suffix}'
     lonname = f'{dim_prefix}longitude{dim_suffix}'
@@ -60,8 +73,19 @@ def create_ncfile(ncfile, nlat, nlon, func, dim_prefix='', dim_suffix='', data_p
     data[:] = func(lat2d, lon2d)
 
 def create_ncfile_unstructured(ncmeshout, meshin_file, meshin_varname, func, add_bounds=True, data_prefix='', data_suffix=''):
+    """
+    Create netCDF file variables for data on a unstructured latitude/longitude grid,
+    uses unstructured mesh from UGRID netCDF file.
 
-    # Create unstructured mesh from lfric mesh netCDF file
+        Parameters:
+            ncmeshout: An open, writable netCDF4 dataset
+            meshin_file: UGRID netCDF file, used to extract mesh topology
+            meshin_varname: Variable name of mesh topology data in meshin_file
+            func: Function to generate data values
+            add_bounds: Add latitude/longitude bounds information
+            data_prefix): prefix for the data variable name
+            data_suffix): suffix for the data variable name
+    """
 
     dataname = f'{data_prefix}data{data_suffix}'
 
@@ -244,7 +268,7 @@ def getargs(argv=None):
     parser.add_argument("--nlon", help="Number of longitude points for original grid, not needed for UGRID data (default: %(default)d)", type = int)
     parser.add_argument("--nlatr", help="Number of latitude points for resampled grid (default: %(default)d)", type = int)
     parser.add_argument("--nlonr", help="Number of longitude points for resampled grid (default: %(default)d)", type = int)
-    parser.add_argument("file_out", help="Name of netCDF non-UGRID output file")
+    parser.add_argument("file_out", help="Name of non-UGRID output netCDF file")
 
     parser.set_defaults(**defaults)
     args = parser.parse_args(argv)
@@ -255,6 +279,19 @@ def run(file_out, func_str=defaults['func_str'], mesh_file=defaults['mesh_file']
                   mesh_varname=defaults['mesh_varname'], 
                   nlat=defaults['nlat'], nlon=defaults['nlon'], 
                   nlatr=defaults['nlatr'], nlonr=defaults['nlonr']):
+    """
+    Generate netCDF files with data on domains suitable for regridding
+
+        Parameters:
+            file_out: Name of non-UGRID output netCDF file
+            func_str: Name of analytic function for data variable
+            mesh_file: Name of netCDF file containing UGRID mesh topology data, needed for UGRID data
+            mesh_varname: Variable name of mesh topology data in netCDF file, optional for UGRID data
+            nlat: Number of latitude points for original grid, not needed for UGRID data
+            nlon: Number of longitude points for original grid, not needed for UGRID data
+            nlatr: Number of latitude points for resampled grid
+            nlonr: Number of longitude points for resampled grid
+    """
 
     df = dataFunc()
     func = df.get_func(func_str)
