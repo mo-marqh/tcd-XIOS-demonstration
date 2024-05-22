@@ -22,7 +22,7 @@ class TestParallelWrite(xshared._TestCase):
         # run the compiled Fortran XIOS programme
         with open('{}/xios.xml'.format(self.test_dir)) as cxml:
             print(cxml.read(), flush=True)
-        self.run_mpi_xios()
+        self.run_mpi_xios(nclients=3)
         outputfile_1 = self.transient_outputs[0]
 
         # Check the expected output file exists
