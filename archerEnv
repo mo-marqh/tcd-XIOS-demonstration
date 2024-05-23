@@ -26,4 +26,4 @@ export PLATFORM=Archer2
 : ${MVER=XIOS3/trunk}
 export MVER
 # start interative session
-salloc --nodes=2 --ntasks-per-node=8 --cpus-per-task=1 --time=00:15:00 --partition=standard --qos=short --account=n02-cms
+salloc --nodes=2 --ntasks-per-node=8 --cpus-per-task=1 --time=00:15:00 --partition=standard --qos=short --account=n02-ngarch
