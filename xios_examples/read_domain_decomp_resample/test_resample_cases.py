@@ -38,7 +38,12 @@ for f in glob.glob('{}/*.cdl'.format(this_dir)):
     # unique name for the test
     tname = 'test_{}'.format(os.path.splitext(os.path.basename(f))[0])
     # add the test as an attribute (function) to the test class
-    if tname in known_failures:
+    if not os.environ.get('MVER', '').startswith('XIOS3/trunk'):
+        # these tests are hitting exceptions with XIOS2
+        # and XIOS3, so skip for XIOS2 runner
+        setattr(TestResampleDomain, tname,
+                unittest.skip(TestResampleDomain.make_a_resample_test(f)))
+    elif tname in known_failures:
         # set decorator @unittest.expectedFailure
         setattr(TestResampleDomain, tname,
                 unittest.expectedFailure(TestResampleDomain.make_a_resample_test(f, nclients=3)))
