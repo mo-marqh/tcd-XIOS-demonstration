@@ -4,8 +4,11 @@
 
   <domain_definition>
 
-    <domain id="original_domain" type="rectilinear" />
+    <domain id="original_domain" type="rectilinear" >
+      <generate_rectilinear_domain/>
+    </domain>
     <domain id="resampled_domain" type="rectilinear" >
+      <generate_rectilinear_domain/>
       <interpolate_domain id="interpolator" order="1"/>
     </domain>
 
