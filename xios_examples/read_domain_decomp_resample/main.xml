@@ -7,8 +7,10 @@
     <domain id="original_domain" type="rectilinear" >
       <generate_rectilinear_domain/>
     </domain>
-    <domain id="resampled_domain" type="rectilinear" >
+    <domain id="resample_domain" type="rectilinear" >
       <generate_rectilinear_domain/>
+    </domain>
+    <domain id="resampled_domain" domain_ref="resample_domain" >
       <interpolate_domain id="interpolator" order="1"/>
     </domain>
 
@@ -18,6 +20,9 @@
 
     <grid id="original_grid">
       <domain domain_ref="original_domain" />
+    </grid>
+    <grid id="resample_grid">
+      <domain domain_ref="resample_domain" />
     </grid>
     <grid id="resampled_grid">
       <domain domain_ref="resampled_domain" />
@@ -36,7 +41,7 @@
   <file_definition type="one_file">
     <file id="domain_input" output_freq="1ts" mode="read" enabled=".true.">
       <field id="odatain" name="original_data" grid_ref="original_grid" operation="instant" />
-      <field id="edatain" name="resample_data" grid_ref="resampled_grid" operation="instant" />
+      <field id="edatain" name="resample_data" grid_ref="resample_grid" operation="instant" />
     </file>
     <file id="domain_output" output_freq="1ts">
       <field_group operation="once">
