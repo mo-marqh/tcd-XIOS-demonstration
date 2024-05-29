@@ -180,7 +180,7 @@ contains
     double precision, dimension (:,:), allocatable :: inedata
 
     call xios_get_domain_attr('original_domain', ni=lenx, nj=leny)
-    call xios_get_domain_attr('resampled_domain', ni=lenrx, nj=lenry)
+    call xios_get_domain_attr('resample_domain', ni=lenrx, nj=lenry)
 
     allocate ( inodata(leny, lenx) )
     allocate ( inedata(lenry, lenrx) )
