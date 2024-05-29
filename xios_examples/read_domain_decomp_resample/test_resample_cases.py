@@ -17,6 +17,28 @@ class TestResampleDomain(xshared._TestCase):
     transient_outputs = ['domain_output.nc']
     rtol = 5e-03
 
+    @classmethod
+    def setUpClass(cls):
+        """
+        First, patch the code for XIOS2 compliance, if used. Then,
+        use the parent class to build the fortran code only once for this class.
+
+        """
+        if os.environ.get('MVER', '').startswith('XIOS2/'):
+            patchsource = ""
+            with open(f'{this_dir}/resample.F90') as insource:
+                lines = insource.readlines()
+                for line in readlines:
+                    pline = line
+                    if line == """    call xios_get_domain_attr("odatax::", &""":
+                        pline = """    call xios_get_domain_attr("original_domain_read", &"""
+                    elif line == """    call xios_get_domain_attr("edatax::", &""":
+                        pline = """    call xios_get_domain_attr("resampled_domain_read", &"""
+                    patchsource += pline
+            with open(f'{this_dir}/resample.F90', 'w') as outsource:
+                outsource.write(patchsource)
+        super().setUpClass()
+
 
 # A list of input `.cdl` files where XIOS is known to produce different
 # output from the expected output data
@@ -41,7 +63,7 @@ for f in glob.glob('{}/*.cdl'.format(this_dir)):
     if tname in known_failures:
         # set decorator @unittest.expectedFailure
         setattr(TestResampleDomain, tname,
-                unittest.expectedFailure(TestResampleDomain.make_a_resample_test(f, nclients=3)))
+                unittest.expectedFailure(TestResampleDomain.make_a_resample_test(f, nclients=3, ncdump=True)))
     else:
         setattr(TestResampleDomain, tname,
-                TestResampleDomain.make_a_resample_test(f, nclients=3))
+                TestResampleDomain.make_a_resample_test(f, nclients=3, ncdump=True))

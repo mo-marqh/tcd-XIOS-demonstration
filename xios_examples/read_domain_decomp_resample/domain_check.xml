@@ -4,10 +4,14 @@
 
   <grid_definition>
     <grid id="original_grid_read">
-      <domain id="original_domain_read" type="rectilinear" />
+      <domain id="original_domain_read" type="rectilinear" >
+       <generate_rectilinear_domain/>
+      </domain>
     </grid>
     <grid id="resampled_grid_read">
-      <domain id="resampled_domain_read" type="rectilinear" />
+      <domain id="resampled_domain_read" type="rectilinear" >
+       <generate_rectilinear_domain/>
+      </domain>
     </grid>
   </grid_definition>
 

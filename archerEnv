@@ -12,7 +12,7 @@ export NETCDF_LIBDIR=-L$NETCDF_DIR/lib
 export NETCDF_INCDIR=-I$NETCDF_DIR/include/
 
 # set XIOS build to XIOS3 marqh build, if not already set
-: ${XIOS_DIR=/work/n02/n02/marqh/metofficegit/tcd-XIOS3-extras}
+: ${XIOS_DIR=/work/n02/n02/marqh/metofficegit/tcd-XIOS3-extras-debug}
 
 # provide explicit paths to all XIOS components
 export XIOS_INCDIR=$XIOS_DIR/inc
