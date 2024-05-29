@@ -62,7 +62,7 @@ contains
     call xios_set_timestep(tstep)
     call xios_close_context_definition()
 
-    call xios_get_domain_attr("odatax::", &
+    call xios_get_domain_attr("original_domain_read", &
                               ni_glo=ni_glo, nj_glo=nj_glo, &
                               ni=ni, nj=nj, &
                               ibegin=ibegin, jbegin=jbegin)
@@ -71,7 +71,7 @@ contains
     allocate ( yvals(nj) )
     !allocate ( xb(2, ni) )
     !allocate ( yb(2, nj) )
-    call xios_get_domain_attr("odatax::", lonvalue_1d=xvals, &
+    call xios_get_domain_attr("original_domain_read", lonvalue_1d=xvals, &
         latvalue_1d=yvals)
     print *, 'odatax; rank', rank, 'xvals', xvals
     print *, 'odatax; rank', rank, 'yvals', yvals
@@ -81,7 +81,7 @@ contains
     ! print *, 'odatax; rank', rank, 'xbounds', xb
     ! print *, 'odatax; rank', rank, 'ybounds', yb
 
-    call xios_get_domain_attr("edatax::", &
+    call xios_get_domain_attr("resampled_domain_read", &
                               ni_glo=ni_glo_r, nj_glo=nj_glo_r, &
                               ni=ni_r, nj=nj_r, &
                               ibegin=ibegin_r, jbegin=jbegin_r)
@@ -91,7 +91,7 @@ contains
     !allocate ( xb(2, ni_r) )
     !allocate ( yb(2, nj_r) )
 
-    call xios_get_domain_attr("edatax::", &
+    call xios_get_domain_attr("resampled_domain_read", &
                               lonvalue_1d=xrvals, &
                               latvalue_1d=yrvals)!, bounds_lon_1d=xrb, &
                               !bounds_lat_1d=yrb)
