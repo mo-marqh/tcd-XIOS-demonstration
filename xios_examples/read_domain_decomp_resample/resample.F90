@@ -66,7 +66,9 @@ contains
                               ni_glo=ni_glo, nj_glo=nj_glo, &
                               ni=ni, nj=nj, &
                               ibegin=ibegin, jbegin=jbegin)
-    print *, 'original_domain: rank=',rank,' ; ni=',ni,' ; nj=',nj,' ; ibegin=',ibegin,' ; jbegin=',jbegin,' ; ni_glo=',ni_glo,' ; nj_glo=',nj_glo
+    print *, 'original_domain: rank=',rank,' ; ni=',ni,' ; nj=',nj, &
+         ' ; ibegin=',ibegin,' ; jbegin=',jbegin,' ; ni_glo=',ni_glo, &
+         ' ; nj_glo=',nj_glo
     allocate ( xvals(ni) )
     allocate ( yvals(nj) )
 
@@ -81,7 +83,9 @@ contains
                               ni_glo=ni_glo_r, nj_glo=nj_glo_r, &
                               ni=ni_r, nj=nj_r, &
                               ibegin=ibegin_r, jbegin=jbegin_r)
-    print *, 'resampled_domain: rank=',rank,' ; ni=',ni_r,' ; nj=',nj_r,' ; ibegin=',ibegin_r,' ; jbegin=',jbegin_r,' ; ni_glo=',ni_glo_r,' ; nj_glo=',nj_glo_r
+    print *, 'resampled_domain: rank=',rank,' ; ni=',ni_r,' ; nj=',nj_r, &
+         ' ; ibegin=',ibegin_r,' ; jbegin=',jbegin_r,' ; ni_glo=',ni_glo_r, &
+         ' ; nj_glo=',nj_glo_r
     allocate ( xrvals(ni_r) )
     allocate ( yrvals(nj_r) )
 
@@ -121,7 +125,9 @@ contains
                               ni=ni, nj=nj, &
                               ibegin=ibegin, jbegin=jbegin, &
                               lonvalue_1d=xvals, latvalue_1d=yvals)
-    print *, 'original_domain: rank=',rank,' ; ni=',ni,' ; nj=',nj,' ; ibegin=',ibegin,' ; jbegin=',jbegin,' ; ni_glo=',ni_glo,' ; nj_glo=',nj_glo
+    print *, 'original_domain: rank=',rank,' ; ni=',ni,' ; nj=',nj, &
+         ' ; ibegin=',ibegin,' ; jbegin=',jbegin,' ; ni_glo=',ni_glo, &
+         ' ; nj_glo=',nj_glo
     print *, 'xvals', xvals
     print *, 'yvals', yvals
 
@@ -131,7 +137,9 @@ contains
                               ni=ni_r, nj=nj_r, &
                               ibegin=ibegin_r, jbegin=jbegin_r, &
                               lonvalue_1d=xrvals, latvalue_1d=yrvals)
-    print *, 'resampled_domain: rank=',rank,' ; ni=',ni_r,' ; nj=',nj_r,' ; ibegin=',ibegin_r,' ; jbegin=',jbegin_r,' ; ni_glo=',ni_glo_r,' ; nj_glo=',nj_glo_r
+    print *, 'resampled_domain: rank=',rank,' ; ni=',ni_r,' ; nj=',nj_r, &
+         ' ; ibegin=',ibegin_r,' ; jbegin=',jbegin_r,' ; ni_glo=',ni_glo_r, &
+         ' ; nj_glo=',nj_glo_r
     print *, 'xvals', xrvals
     print *, 'yvals', yrvals
 
