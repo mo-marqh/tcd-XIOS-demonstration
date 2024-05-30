@@ -1,0 +1,65 @@
+netcdf domain_input {
+dimensions:
+        x = 9 ;
+        y = 9 ;
+        x_resample = 6 ;
+        y_resample = 6 ;
+
+variables:
+        float x(x) ;
+                x:long_name = "original x coordinate" ;
+                x:units = "1";
+		x:bounds = "x_bounds" ;
+        float y(y) ;
+                y:long_name = "original y coordinate" ;
+                y:units = "1";
+                y:bounds = "y_bounds" ;
+        float x_resample(x_resample) ;
+                x_resample:long_name = "resampled x coordinate" ;
+                x_resample:units = "1";
+		x_resample:bounds = "x_resample_bounds" ;
+        float y_resample(y_resample) ;
+                y_resample:long_name = "resampled y coordinate" ;
+                y_resample:units = "1";
+		y_resample:bounds = "y_resample_bounds";
+        double original_data(y,x) ;
+                original_data:long_name = "input data values" ;
+                original_data:units = "1";
+        double resample_data(y_resample,x_resample) ;
+                resample_data:long_name = "expected resampled data values" ;
+                resample_data:units = "1";
+
+// global attributes:
+                :title = "Input data for XIOS Domain resampling; data is a sum of the x & y coordinates; x + y ." ;
+
+data:
+
+ x = 0, 2, 4, 6, 8, 10, 12, 14, 16 ;
+
+ y = 0, 2, 4, 6, 8, 10, 12, 14, 16;
+
+ x_resample = 3, 5, 7, 9, 11, 13 ;
+
+ y_resample = 3, 5, 7, 9, 11, 13 ;
+
+
+ original_data =  0,  2,  4,  6,  8, 10, 12, 14, 16,
+                  2,  4,  6,  8, 10, 12, 14, 16, 18,
+                  4,  6,  8, 10, 12, 14, 16, 18, 20,
+                  6,  8, 10, 12, 14, 16, 18, 20, 22,
+                  8, 10, 12, 14, 16, 18, 20, 22, 24,
+                 10, 12, 14, 16, 18, 20, 22, 24, 26,
+		 12, 14, 16, 18, 20, 22, 24, 26, 28,
+		 14, 16, 18, 20, 22, 24, 26, 28, 30,
+		 16, 18, 20, 22, 24, 26, 28, 30, 32
+		 ;
+
+ resample_data =  6,  8, 10, 12, 14, 16, 
+                  8, 10, 12, 14, 16, 18,
+		 10, 12, 14, 16, 18, 20,
+		 12, 14, 16, 18, 20, 22,
+		 14, 16, 18, 20, 22, 24,
+		 16, 18, 20, 22, 24, 26
+		 ;
+
+}
