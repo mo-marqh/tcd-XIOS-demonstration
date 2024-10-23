@@ -27,7 +27,7 @@
       <field id="odatain" name="original_data" grid_ref="original_grid" operation="instant" read_access=".true." />
     </file>
     <file id="domain_output" output_freq="1ts">
-      <field_group operation="once">
+      <field_group operation="once" conversion_by_netcdf=".false.">
         <field field_ref="odata" />
         <field field_ref="pdata" />
       </field_group>
