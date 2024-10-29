@@ -1,0 +1,27 @@
+<context>
+
+  <calendar type="Gregorian"/>
+
+  <axis_definition>
+    <axis id="lon" />
+    <axis id="lat" />
+    <axis id="alt" />
+
+  </axis_definition>
+
+  <grid_definition>
+    <grid id="oax_grid">
+      <axis axis_ref="lon" />
+      <axis axis_ref="lat" />
+      <axis axis_ref="alt" />
+    </grid>
+
+  </grid_definition>
+
+  <file_definition type="one_file">
+    <file id="din" name="domain_input" output_freq="1ts" mode="read" enabled=".true.">
+      <field id="odatax" name="original_data" grid_ref="oax_grid" operation="instant" />
+    </file>
+  </file_definition>
+  
+</context>
