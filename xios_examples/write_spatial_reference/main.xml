@@ -13,7 +13,7 @@
   <domain_definition>
 
     <domain id="original_domain" type="rectilinear" />
-
+    <generate_rectilinear_domain/>
   </domain_definition>
 
   <grid_definition>
