@@ -58,8 +58,11 @@ contains
 
     ! fetch sizes of axes from the input file
     call xios_get_axis_attr('lon', n_glo=lenx)
+    print *, "got lon n_glo"
     call xios_get_axis_attr('lat', n_glo=leny)
+    print *, "got lat n_glo"
     call xios_get_axis_attr('alt', n_glo=lenz)
+    print *, "got alt n_glo"
 
     allocate ( lonvals(lenx) )
     allocate ( latvals(leny) )
@@ -67,8 +70,11 @@ contains
 
     ! fetch coordinate value arrays from the input file
     call xios_get_axis_attr('lon', value=lonvals)
+    print *, "got lon values"
     call xios_get_axis_attr('lat', value=latvals)
+    print *, "got lat values"
     call xios_get_axis_attr('alt', value=altvals)
+    print *, "got alt values"
 
     print *, "entering main"
     ! initialize the main context for interacting with the data.
