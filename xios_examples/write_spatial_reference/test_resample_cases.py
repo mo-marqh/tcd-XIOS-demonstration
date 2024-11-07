@@ -13,8 +13,8 @@ this_dir = os.path.dirname(this_path)
 
 class TestResampleDomain(xshared._TestCase):
     test_dir = this_dir
-    transient_inputs = ['domain_input.nc']
-    transient_outputs = ['domain_output.nc']
+    transient_inputs = ['spatial_data_input.nc']
+    transient_outputs = ['spatial_data_output.nc']
     rtol = 5e-03
 
     @classmethod
@@ -39,15 +39,27 @@ class TestResampleDomain(xshared._TestCase):
             runfile = '{}/{}'.format(cls.test_dir, outputfile)
             assert(os.path.exists(runfile))
             run_cmd = ['ncdump', runfile]
-            subprocess.run(run_cmd, check=True)
+            ncd = subprocess.run(run_cmd, check=True, capture_output=True)
+
+            with open(f'{this_dir}/expected_domain_output.cdl') as fin:
+                exptd = fin.read()
+            emsg = ''
+            for eline, aline in zip(exptd.split('\n'),
+                                    ncd.stdout.decode("utf-8").split('\n')):
+                if eline != aline:
+                    # skip timestamp and uuid
+                    # until we work out how not to set these
+                    if not (':timeStamp' in eline or ':uuid' in eline):
+                        emsg += eline + '\n' + aline + '\n\tmismatch\n\n'
+
+            self.assertFalse(emsg, msg=emsg)
         return test_resample
 
 
-# iterate through `.cdl` files in this test case folder
-for f in glob.glob('{}/*.cdl'.format(this_dir)):
-    # unique name for the test
-    tname = 'test_{}'.format(os.path.splitext(os.path.basename(f))[0])
-    # add the test as an attribute (function) to the test class
+f = f'{this_dir}/spatial_data_input.cdl'
+# unique name for the test
+tname = 'test_{}'.format(os.path.splitext(os.path.basename(f))[0])
+# add the test as an attribute (function) to the test class
 
-    setattr(TestResampleDomain, tname,
-            TestResampleDomain.make_a_write_test(f))
+setattr(TestResampleDomain, tname,
+        TestResampleDomain.make_a_write_test(f))

@@ -15,7 +15,7 @@ program resample
   integer :: comm = -1
   integer :: rank = -1
   integer :: npar = 0
-  print *, "why is this called resample?"
+
   call initialise()
   call simulate()
   call finalise()
@@ -39,30 +39,25 @@ contains
 
     ! Initialise MPI and XIOS
     call MPI_INIT(mpi_error)
-    print *, "initialising"
     call xios_initialize('client', return_comm=comm)
-    print *, "boo"
+
     call MPI_Comm_rank(comm, rank, mpi_error)
     call MPI_Comm_size(comm, npar, mpi_error)
 
     ! use the axis_check context to obtain sizing information on all arrays
     ! for use in defining the main context interpretation
-    print *, "entering axis_check"
+
     call xios_context_initialize('axis_check', comm)
     call xios_set_time_origin(origin)
     call xios_set_start_date(start)
     call xios_set_timestep(tstep)
 
     call xios_close_context_definition()
-    print *, "axis_check defined"
 
-    ! fetch sizes of axes from the input file
+    ! fetch sizes of axes from the input file for allocate
     call xios_get_axis_attr('lon', n_glo=lenx)
-    print *, "got lon n_glo"
     call xios_get_axis_attr('lat', n_glo=leny)
-    print *, "got lat n_glo"
     call xios_get_axis_attr('alt', n_glo=lenz)
-    print *, "got alt n_glo"
 
     allocate ( lonvals(lenx) )
     allocate ( latvals(leny) )
@@ -70,13 +65,13 @@ contains
 
     ! fetch coordinate value arrays from the input file
     call xios_get_axis_attr('lon', value=lonvals)
-    print *, "got lon values"
     call xios_get_axis_attr('lat', value=latvals)
-    print *, "got lat values"
     call xios_get_axis_attr('alt', value=altvals)
-    print *, "got alt values"
 
-    print *, "entering main"
+    ! finalise axis_check context, no longer in use
+    call xios_set_current_context('axis_check')
+    call xios_context_finalize()
+
     ! initialize the main context for interacting with the data.
     call xios_context_initialize('main', comm)
 
@@ -90,7 +85,6 @@ contains
     call xios_set_axis_attr("alt", n_glo=lenz, n=lenz, begin=0)
     call xios_set_axis_attr("alt", value=altvals)
     call xios_close_context_definition()
-    print *, "main defined"
 
   end subroutine initialise
 
@@ -99,11 +93,9 @@ contains
     integer :: mpi_error
 
     ! Finalise all XIOS contexts and MPI
-    call xios_set_current_context('axis_check')
-    call xios_context_finalize()
     call xios_set_current_context('main')
     call xios_context_finalize()
-    call MPI_Comm_free(comm, mpi_error)
+
     call xios_finalize()
     call MPI_Finalize(mpi_error)
 
