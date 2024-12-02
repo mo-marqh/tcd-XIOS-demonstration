@@ -10,16 +10,17 @@ module use /data/users/lfric/software/modulefiles.rhel7
 
 module load environment/lfric/gcc
 
-# provide explit path set to the arch script for netCDF linking
-export NETCDF_LIB_DIRS=$NETCDF_4_8_1_ROOT/lib:$NETCDF_4_8_1_ROOT/lib64
-export NETCDF_INC_DIRS=$NETCDF_4_8_1_ROOT/include
-
-. arch/arch-GCC_LINUX_APT.path
-
 # provide explicit paths to all XIOS components
 export XIOS_INCDIR=$XIOS_R2252_2_ROOT/include
 export XIOS_LIBDIR=$XIOS_R2252_2_ROOT/lib
 export XIOS_BINDIR=$XIOS_R2252_2_ROOT/bin
+
+# ensure netcdf is on the LD path & flags
+export LD_LIBRARY_PATH=$NETCDF_4_8_1_ROOT/lib:$NETCDF_4_8_1_ROOT/lib64:$LD_LIBRARY_PATH
+export LDFLAGS="-L$XIOS_LIBDIR -lxios -L$NETCDF_4_8_1_ROOT/lib -lnetcdf -L$NETCDF_4_8_1_ROOT/lib64 -lnetcdff -lstdc++"
+
+export FCFLAGS="-g -I$XIOS_INCDIR -I$NETCDF_4_8_1_ROOT/include"
+export FC=mpif90
 
 # use an extend LFRic Python environment
 # that includes netCDF4-python built w.r.t. the LFRIC

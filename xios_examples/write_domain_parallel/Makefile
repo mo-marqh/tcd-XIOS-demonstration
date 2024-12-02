@@ -7,35 +7,11 @@
 #
 # Environment Variables expected by this MakeFile:
 #
-# NETCDF_LIBDIR: the directories for the netCDF lib files
-#                 encoded as a -L string, e.g.
-#                 "-L/dir1 -L/dir2"
-# NETCDF_INCDIR: the directories for the netCDF include files
-#                 encoded as a -I string, e.g.
-#                 "-I/dir3 -I/dir4"
-#     (note, this is for consistency with the XIOS build process
-#      required for the CI build machine.
-#      this is not required for other directories)
-#
-# XIOS_INCDIR: The directory for XIOS include files
-# XIOS_LIBDIR: The directory for XIOS lib files
+# FC: mpif90
+# FCFLAGS: -g & include files for netcdf & xios
+# LD_FLAGS: for xios, netcdf, netcdff, stfc++
+# LD_LIBRARY_PATH: for netCDF & XIOS libs
 # XIOS_BINDIR: The directory for XIOS binary files
-
-FCFLAGS = -g
-
-FC = mpif90       # compiler driver for MPI programs
-
-# compiler flag, includes
-FCFLAGS += -I$(XIOS_INCDIR) $(NETCDF_INCDIR)
-
-# loader flags
-LDFLAGS = \
-	-L$(XIOS_LIBDIR) \
-	$(NETCDF_LIBDIR) \
-	-lxios \
-	-lnetcdf \
-	-lnetcdff \
-	-lstdc++ 
 
 all: write_parallel
 
