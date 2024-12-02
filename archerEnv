@@ -8,9 +8,6 @@ module load cray-netcdf-hdf5parallel
 module load cray-python
 module load netcdf4
 
-export NETCDF_LIBDIR=-L$NETCDF_DIR/lib
-export NETCDF_INCDIR=-I$NETCDF_DIR/include/
-
 # set XIOS build to XIOS3 marqh build, if not already set
 : ${XIOS_DIR=/work/n02/n02/marqh/metofficegit/tcd-XIOS3-extras}
 
@@ -18,6 +15,13 @@ export NETCDF_INCDIR=-I$NETCDF_DIR/include/
 export XIOS_INCDIR=$XIOS_DIR/inc
 export XIOS_LIBDIR=$XIOS_DIR/lib
 export XIOS_BINDIR=$XIOS_DIR/bin
+
+# ensure netcdf is on the LD path & flags
+export LD_LIBRARY_PATH=$NETCDF_LIBDIR:$LD_LIBRARY_PATH
+export LDFLAGS="-L$XIOS_LIBDIR -lxios -L$NETCDF_DIR/lib -lnetcdf -lnetcdff -lstdc++"
+
+export FCFLAGS="-g -I$XIOS_INCDIR -I$$NETCDF_DIR/include"
+export FC=mpif90
 
 # set env variable for run switching (mpiexec / srun) and iodef patching (transport)
 export PLATFORM=Archer2

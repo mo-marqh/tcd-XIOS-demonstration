@@ -5,8 +5,8 @@
 module load jaspy/3.11 # need at least version 3.11 for parallel netcdf support
 
 # provide explit path set to the arch script for netCDF linking
-export NETCDF_LIBDIR=-L$(nc-config --libdir)
-export NETCDF_INCDIR=-I$(nc-config --includedir)
+export NETCDF_LIBDIR=$(nc-config --libdir)
+export NETCDF_INCDIR=$(nc-config --includedir)
 
 # set XIOS build to XIOS2 trunk revision 2628, if not already set
 : ${XIOS_DIR=/home/users/jcole/software/xios_trunk_r2628}
@@ -15,6 +15,13 @@ export NETCDF_INCDIR=-I$(nc-config --includedir)
 export XIOS_INCDIR=$XIOS_DIR/inc
 export XIOS_LIBDIR=$XIOS_DIR/lib
 export XIOS_BINDIR=$XIOS_DIR/bin
+
+# ensure netcdf is on the LD path & flags
+export LD_LIBRARY_PATH=$NETCDF_LIBDIR:$LD_LIBRARY_PATH
+export LDFLAGS="-L$XIOS_LIBDIR -lxios -L$NETCDF_LIBDIR -lnetcdf -lnetcdff -lstdc++"
+
+export FCFLAGS="-g -I$XIOS_INCDIR -I$NETCDF_INCDIR"
+export FC=mpif90
 
 # set env variable for run switching (mpiexec / srun) and iodef patching (transport)
 export PLATFORM=Jasmin
