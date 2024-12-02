@@ -44,11 +44,13 @@ jobs:
           cd ../..
       - name: run resample example
         run: |
-          . arch/arch-GCC_LINUX_APT.env
-          . arch/arch-GCC_LINUX_APT.path
           export XIOS_BINDIR=$PWD/XIOS/bin
           export XIOS_INCDIR=$PWD/XIOS/inc
           export XIOS_LIBDIR=$PWD/XIOS/lib
+          export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/netcdf/mpi/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+          export LDFLAGS="-L$XIOS_LIBDIR -lxios $(pkg-config --libs netcdf) $(pkg-config --libs netcdf-fortran) -lstdc++"
+          export FCFLAGS="-g -I$XIOS_INCDIR $(pkg-config --cflags-only-I netcdf) $(pkg-config --cflags-only-I netcdf-fortran)"
+          export FC=mpif90
 
           export MVER=${{ matrix.version }}
           export MPI_FLAVOUR='openmpi'
