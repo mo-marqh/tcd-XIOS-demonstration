@@ -1,0 +1,21 @@
+# this environment management script needs to be sourced in order to provide
+# equivalent functionality on the MO AZ Spice linux desktop to the Github CI environment.
+# `. azspiceEnv`
+
+# load Azure Spice Spack xios module
+module load xios
+
+# ensure netcdf is on the LD path & flags
+export LD_LIBRARY_PATH=${NETCDFF_ROOT}/lib:$LD_LIBRARY_PATH
+export LDFLAGS="-L$XIOS_LIBDIR -lxios $(pkg-config --libs netcdf) $(pkg-config --libs netcdf-fortran) -lstdc++"
+
+# provide explit path set to the arch script for netCDF linking
+export NETCDF_LIBDIR="-L$NETCDFC_ROOT/lib -L$NETCDFF_ROOT/lib"
+export NETCDF_INCDIR="-L$NETCDFC_ROOT/include -L$NETCDFF_ROOT/include"
+
+# provide specific sub_paths for the demonstration build
+export XIOS_INCDIR=$XIOS_ROOT/include
+export XIOS_LIBDIR=$XIOS_ROOT/lib
+export XIOS_BINDIR=$XIOS_ROOT/bin
+
+export MVER=XIOS/trunk@2252
