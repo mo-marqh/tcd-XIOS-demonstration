@@ -23,7 +23,11 @@ jobs:
             sudo apt -yq install $(<dependencies)
       - name: clone and build XIOS
         run: |
-          svn co http://forge.ipsl.fr/ioserver/svn/${{ matrix.version }} XIOS
+          if [ ${{ matrix.version }} == 'XIOS3/trunk' ]; then
+            svn co http://forge.ipsl.fr/ioserver/svn/${{ matrix.version }}@2686 XIOS
+          else
+            svn co http://forge.ipsl.fr/ioserver/svn/${{ matrix.version }} XIOS
+          fi
           cp arch/* XIOS/arch/
           cd XIOS
           if [ ${{ matrix.version }} == 'XIOS3/trunk' ]; then
