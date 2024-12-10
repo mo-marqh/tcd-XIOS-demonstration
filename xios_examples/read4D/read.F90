@@ -16,7 +16,7 @@ program resample
   integer :: npar = 0
 
   call initialise()
-  ! call simulate()
+  call simulate()
   call finalise()
 contains
 
@@ -38,9 +38,6 @@ contains
     integer :: nl_glo
     integer :: nl
     integer :: lbegin
-    integer :: nm_glo
-    integer :: nm
-    integer :: mbegin
 
     ! Datetime setup, required for XIOS & matched to input
     origin = xios_date(2024, 11, 15, 0, 0, 0)
@@ -68,12 +65,6 @@ contains
                               ni=ni, nj=nj, &
                               ibegin=ibegin, jbegin=jbegin)
     print *, 'original_domain: rank,ni_glo,nj_glo,ni,nj,ibegin,jbegin ',rank,ni_glo,nj_glo,ni,nj,ibegin,jbegin
-    ! call xios_get_axis_attr("hm", n_glo=ni_glo, n=ni, begin=ibegin)
-    ! print *, 'hm: n_glo, n, begin', ni_glo, ni, ibegin
-    ! call xios_get_axis_attr("hmm", n_glo=nj_glo, n=nj, begin=jbegin)
-    ! print *, 'hm: n_glo, n, begin', nj_glo, nj, jbegin
-    call xios_get_axis_attr("eh", n_glo=nm_glo, n=nm, begin=mbegin)
-    print *, 'eh: n_glo, n, begin', nm_glo, nm, mbegin
     call xios_get_axis_attr("mlev", n_glo=nk_glo, n=nk, begin=kbegin)
     print *, 'mlev: n_glo, n, begin', nk_glo, nk, kbegin
     call xios_get_axis_attr("t", n_glo=nl_glo, n=nl, begin=lbegin)
@@ -115,8 +106,9 @@ contains
     call xios_get_axis_attr("mlev", n=lenz)
     call xios_get_axis_attr("t", n=lent)
 
-    allocate ( inshdata(lent, lenz, leny, lenx) )
 
+    allocate ( inshdata(lent, lenz, leny, lenx) )
+    print *, "ready to load data from specific humidity array variable"
     ! Load data from the input file
     call xios_recv_field('specific_humidity', inshdata)
     print *, "data loaded from specific humidity array variable"

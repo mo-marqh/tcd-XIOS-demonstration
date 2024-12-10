@@ -8,9 +8,6 @@
     <domain id="original_domain" type="rectilinear" >
       <generate_rectilinear_domain/>
     </domain>
-      <!-- <axis id='hm' /> -->
-      <!-- <axis id='hmm' /> -->
-      <axis id="eh" />
       <axis id="mlev" />
       <axis id="t" />
     </grid>
