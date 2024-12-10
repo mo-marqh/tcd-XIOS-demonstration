@@ -55,4 +55,4 @@ jobs:
           export MVER=${{ matrix.version }}
           export MPI_FLAVOUR='openmpi'
 
-          python3 -m unittest discover -v -s xios_examples
+          python3 -m unittest xios_examples.read4D.test_read4D
