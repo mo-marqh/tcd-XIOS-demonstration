@@ -25,4 +25,4 @@ class TestRead4D(xshared._TestCase):
         
         subprocess.run(['ncgen', '-k', 'nc4', '-o', inputfile,
                         infile], cwd=self.test_dir, check=True)
-        self.run_mpi_xios()
+        self.run_mpi_xios(nservers=2)
