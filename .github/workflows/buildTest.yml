@@ -27,15 +27,10 @@ jobs:
           cp arch/* XIOS/arch/
           cd XIOS
           if [ ${{ matrix.version }} == 'XIOS3/trunk' ]; then
-            patch -p0 < ../patches/xios3/compilePatches.patch
             sed -i 's/<variable_group id="parameters" >/<variable_group id="parameters" > <variable id="transport_protocol" type="string" >p2p<\/variable>/g' generic_testcase/iodef.xml
             cat generic_testcase/iodef.xml
-          elif [ ${{ matrix.version }} == 'XIOS2/trunk' ]; then
-            patch -p0 < ../patches/xios2/compilePatches.patch
           elif [ ${{ matrix.version }} == 'XIOS/trunk@2252' ]; then
             patch -p0 < ../patches/xios2/compilePatches.r2252.patch
-          else
-            echo "no patches applied"
           fi
           ./make_xios --job 2 --arch GCC_LINUX_APT --debug
           cd ..
