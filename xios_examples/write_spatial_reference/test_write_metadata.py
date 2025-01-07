@@ -11,10 +11,11 @@ import xios_examples.shared_testing as xshared
 this_path = os.path.realpath(__file__)
 this_dir = os.path.dirname(this_path)
 
-class TestResampleDomain(xshared._TestCase):
+class TestWriteMetadata(xshared._TestCase):
     test_dir = this_dir
     transient_inputs = ['spatial_data_input.nc']
     transient_outputs = ['spatial_data_output.nc']
+    executable = './write.exe'
     rtol = 5e-03
 
     @classmethod
@@ -27,10 +28,10 @@ class TestResampleDomain(xshared._TestCase):
         """
         # always copy for value, don't pass by reference.
         infcp = copy.copy(inf)
-        # expected by the fortran XIOS resample program's main.xml
+        # expected by the fortran XIOS program's main.xml
         inputfile = cls.transient_inputs[0]
         outputfile = cls.transient_outputs[0]
-        def test_resample(self):
+        def test_write_metadata(self):
             # create a netCDF file using nc_method
             cls.make_netcdf(infcp, inputfile, nc_method=nc_method)
             cls.run_mpi_xios(nclients=nclients, nservers=nservers)
@@ -53,7 +54,7 @@ class TestResampleDomain(xshared._TestCase):
                         emsg += eline + '\n' + aline + '\n\tmismatch\n\n'
 
             self.assertFalse(emsg, msg=emsg)
-        return test_resample
+        return test_write_metadata
 
 
 f = f'{this_dir}/spatial_data_input.cdl'
@@ -61,5 +62,5 @@ f = f'{this_dir}/spatial_data_input.cdl'
 tname = 'test_{}'.format(os.path.splitext(os.path.basename(f))[0])
 # add the test as an attribute (function) to the test class
 
-setattr(TestResampleDomain, tname,
-        TestResampleDomain.make_a_write_test(f))
+setattr(TestWriteMetadata, tname,
+        TestWriteMetadata.make_a_write_test(f))

@@ -1,12 +1,11 @@
 !-----------------------------------------------------------------------------
-! (C) Crown copyright 2024 Met Office. All rights reserved.
+! (C) Crown copyright 2025 Met Office. All rights reserved.
 ! The file LICENCE, distributed with this code, contains details of the terms
 ! under which the code may be used.
 !-----------------------------------------------------------------------------
-!> Increasingly unclearly named `resample` program to just write data with 
-!> coordinate system definition metadata.
+!> Programme to just write data with coordinate system definition metadata.
 !>
-program resample
+program write
   use xios
   use mpi
 
@@ -134,4 +133,4 @@ contains
 
   end subroutine simulate
 
-end program resample
+end program write
