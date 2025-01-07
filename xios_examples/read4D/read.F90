@@ -102,7 +102,7 @@ contains
     ! Allocatable arrays, size is taken from input file
     double precision, dimension (:,:,:,:), allocatable :: inshdata
 
-    call xios_get_domain_attr('original_domain', ni=lenx, nj=leny)
+    call xios_get_domain_attr("original_domain", ni=lenx, nj=leny)
     call xios_get_axis_attr("mlev", n=lenz)
     call xios_get_axis_attr("t", n=lent)
 
