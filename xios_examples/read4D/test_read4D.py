@@ -17,6 +17,16 @@ class TestRead4D(xshared._TestCase):
     transient_outputs = []
     executable = './read.exe'
 
+    # There is a bug in the dimensionality reading of structured domains
+    # in XIOS2r2252 which is fixed in the newer version of XIOS2.
+    # this manifests as:
+    # ```In file "nc4_data_input.cpp", function "virtual void 
+    # xios::CNc4DataInput::readFieldAttributes_(xios::CField*, bool)",
+    # line 154 -> Field 'specific_humidity' has incorrect dimension 
+    # Verify dimension of grid defined by 'grid_ref' or 'domain_ref'/'axis_ref' 
+    # and dimension of grid in read file.```
+    # The dimensionality is correct in the test, but XIOS2r2252 gets this wrong.
+    # hence, skip test for this test matrix element.
     @unittest.skipIf(os.environ.get('MVER', '') == 'XIOS/trunk@2252',
                      "skipping for ")
     def test_read_4d(self):
