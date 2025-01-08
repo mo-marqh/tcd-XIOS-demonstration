@@ -17,8 +17,6 @@ class TestRead4D(xshared._TestCase):
     transient_outputs = []
     executable = './read.exe'
 
-    @unittest.skipIf(os.environ.get('MVER', '') == 'XIOS/trunk@2252',
-                     "skipping for ")
     def test_read_4d(self):
         inputfile = self.transient_inputs[0]
         infile = inputfile.replace('.nc', '.cdl')
