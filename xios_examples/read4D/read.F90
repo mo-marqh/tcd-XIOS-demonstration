@@ -82,9 +82,6 @@ contains
     call xios_set_current_context('domain_check')
     call xios_context_finalize()
     print *, "domain_check context finalised"
-    ! call xios_set_current_context('main')
-    ! call xios_context_finalize()
-    call MPI_Comm_free(comm, mpi_error)
     call xios_finalize()
     call MPI_Finalize(mpi_error)
 
